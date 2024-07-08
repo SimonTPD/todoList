@@ -34,4 +34,20 @@ function createTodoDiv(todo){
     return todoDiv;
 }
 
-export default createTodoDiv;
+function createSidebarProjectLi(projectName){
+    //Type check
+    if(typeof projectName !== "string"){
+        console.log("Project name must be a string!");
+        return undefined;
+    }
+
+    const projectLi = document.createElement("li");
+    projectLi.textContent = projectName;
+
+    return projectLi;
+}
+
+export {
+    createTodoDiv,
+    createSidebarProjectLi,
+}

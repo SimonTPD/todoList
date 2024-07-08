@@ -3,6 +3,7 @@ const MAX_DESC_LENGTH = 500;
 const MAX_NOTES_LENGTH = 500;
 const MAX_PRIORITY = 4;
 const MIN_ARGUMENTS_CREATETODOITEM = 5;
+const MAX_USERNAME_LENGTH = 20;
 
 function createTodoItem(title, desc, dueDate, priority, status, notes = ""){
     //Number of arguments check
@@ -225,8 +226,12 @@ function createProject(title){
         return undefined;
     }
 
+    //Private variables
     let projectTitle = title;
     let projectTodos = [];
+
+    //Methods
+    const isProject = () => true;
 
     const getTitle = () => projectTitle;
 
@@ -313,6 +318,7 @@ function createProject(title){
     }
 
     return {
+        isProject,
         getTitle,
         setTitle,
         addTodo,
@@ -322,7 +328,172 @@ function createProject(title){
     }
 }
 
+function createUser(name){
+    //Type check
+    if(typeof name !== "string"){
+        console.log("Name must be a string!");
+        return undefined;
+    }
+
+    //Data check
+    if(name.length === 0){
+        console.log("Name must not be empty!");
+        return undefined;
+    }
+    if(name.length > MAX_USERNAME_LENGTH){
+        console.log("Name is too long!");
+        return undefined;
+    }
+
+    //Private variables
+    let userName = name;
+    let userProjects = [];
+
+
+    //Methods
+    const isUser = () => true;
+
+    const getName = () => userName;
+
+    const setName = (newName) => {
+        if(typeof newName !== "string"){
+            console.log("Name must be a string!");
+            return undefined;
+        }
+        if(newName.length === 0){
+            console.log("Name must not be empty!");
+            return undefined;
+        }
+        if(newName.length > MAX_USERNAME_LENGTH){
+            console.log("Name is too long!");
+            return undefined;
+        }
+        
+        userName = newName;
+    };
+
+    const hasProject = (projectTitle) => {
+        if(typeof projectTitle !== "string"){
+            console.log("Project title must be a string!");
+            return undefined;
+        }
+        if(projectTitle.length === 0){
+            console.log("Project title must not be empty!");
+            return undefined;
+        }
+        if(projectTitle.length > MAX_TITLE_LENGTH){
+            console.log("Project title is too long");
+            return undefined;
+        }
+
+        let foundProject = false;
+        for(let i = 0; i < userProjects.length; i++){
+            if(userProjects[i].getTitle() === projectTitle) foundProject = true;
+        }
+
+        return foundProject;
+    }
+
+    const addProject = (project, index) => {
+        if((project instanceof Object) === false){
+            console.log("Project must be an object!");
+            return undefined;
+        }
+        if((project.hasOwnProperty("isProject")) === false){
+            console.log("This function only accepts project objects!");
+            return undefined;
+        }
+        if(typeof index !== "number"){
+            console.log("Index must be a number!");
+            return undefined;
+        }
+        if(index < 0){
+            console.log("Index must be > 0!");
+            return undefined;
+        }
+        if(index > userProjects.length){
+            console.log("Index must not be greater than number of projects!");
+            return undefined;
+        }
+        if(hasProject(project.getTitle())){
+            console.log("Project already exists!");
+            return undefined;
+        }
+
+        userProjects.splice(index, 0, project);
+        return 0;        
+    }
+
+    const removeProject = (index) => {
+        if(typeof index !== "number"){
+            console.log("Index must be a number!");
+            return undefined;
+        }
+        if(index < 0){
+            console.log("Index must be > 0!");
+            return undefined;
+        }
+        if(index > userProjects.length - 1){
+            console.log("Index must not be greater than number of projects - 1!");
+            return undefined;
+        }
+        userProjects.splice(index, 1);
+    }
+
+    const getProject = (index) => {
+        if(typeof index !== "number"){
+            console.log("Index must be a number!");
+            return undefined;
+        }
+        if(index < 0){
+            console.log("Index must be > 0!");
+            return undefined;
+        }
+        if(index > userProjects.length - 1){
+            console.log("Index must not be greater than number of projects - 1!");
+            return undefined;
+        }
+        return userProjects[index]; 
+    }
+
+    const getProjectByTitle = (projectTitle) => {
+        if(typeof projectTitle !== "string"){
+            console.log("Project title must be a string!");
+            return undefined;
+        }
+        if(projectTitle.length === 0){
+            console.log("Project title must not be empty!");
+            return undefined;
+        }
+        if(projectTitle.length > MAX_TITLE_LENGTH){
+            console.log("Project title is too long");
+            return undefined;
+        }
+        
+        for(let i = 0; i < userProjects.length; i++){
+            if(userProjects[i].getTitle() === projectTitle){
+                return userProjects[i];
+            }
+        }
+    }
+
+    const getAllProjects = () => userProjects;
+
+    return {
+        isUser,
+        getName,
+        setName,
+        hasProject,
+        addProject,
+        removeProject,
+        getProject,
+        getProjectByTitle,
+        getAllProjects,
+    }
+}
+
 export{
     createTodoItem,
     createProject,
+    createUser,
 };
