@@ -1,5 +1,7 @@
 import {
-    createTodoDiv
+    createTodoDiv,
+    appendDOMElementToMainPage,
+    clearMainDiv,
 } from './dom.js';
 
 function loadAllTasks(user){
@@ -13,13 +15,14 @@ function loadAllTasks(user){
         return undefined;
     }
 
-    const divMain = document.querySelector("div.main");
+    clearMainDiv();
+
     const userProjects = user.getAllProjects();
 
     for(let i = 0; i < userProjects.length; i++){
             const projectTodos = userProjects[i].getAllTodos();
             for(let j = 0; j < projectTodos.length; j++){
-                divMain.appendChild(createTodoDiv(projectTodos[j]));
+                appendDOMElementToMainPage(createTodoDiv(projectTodos[j]));
             }
     }
 }

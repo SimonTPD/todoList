@@ -7,7 +7,12 @@ import {
 } 
 from './todo.js';
 import loadAllTasks from './allTasks.js';
-import loadAllProjects from './projects.js'
+import {
+    loadAllProjectLisOnSidebar,
+    addProjectLiToSidebar,
+    loadProject,
+} 
+from './projects.js'
 
 /*Test items and project*/
 let testItem = createTodoItem("Finish this website",
@@ -57,9 +62,16 @@ testUser.addProject(testProject, 1);
 
 /*Main*/
 loadAllTasks(testUser);
-loadAllProjects(testUser);
+const projectSidebarLis = loadAllProjectLisOnSidebar(testUser);
 
 /*Event listeners*/
+const allTasksButton = document.querySelector("div.sidebar > ul > li#all-tasks");
+allTasksButton.addEventListener("click", 
+() => {
+    loadAllTasks(testUser);
+}
+);
+
 const addProjectButton = document.querySelector("div.sidebar > ul > li#add-project");
 addProjectButton.addEventListener("click",
 (event) => {
@@ -67,14 +79,37 @@ addProjectButton.addEventListener("click",
     const addProjectReturn = 
     testUser.addProject(newProject, testUser.getAllProjects().length);
     if(addProjectReturn === undefined){
-        console.log(`Problem adding a new project in the sidebar. 
-        Check console log for error message`);
+        console.log(`Problem adding a new project in the sidebar (add project to the user). Check console log for error message.`);
         return undefined;
     }
 
-    const sidebarProjectList = event.target.parentElement;
-    const sidebarNewProjectLi = document.createElement("li");
-    sidebarProjectList.appendChild(sidebarNewProjectLi);
-    sidebarNewProjectLi.textContent = "New Project";
+    const newProjectLi = addProjectLiToSidebar(newProject);
+    if(newProjectLi === undefined){
+        console.log(`Problem adding a new project in the sidebar (add project to the sidebar). Check console log for error message.`);
+        return undefined;
+    }
+
+    newProjectLi.addEventListener("click", 
+    (event) => {
+        loadProject(
+            testUser.getProject(
+                testUser.hasProject(event.target.textContent)
+            )
+        );
+    }
+    );
 }
 );
+
+for(let i = 0; i < projectSidebarLis.length; i++){
+    console.log(testUser.getProject(testUser.hasProject(projectSidebarLis[i].textContent)).getTitle());
+    projectSidebarLis[i].addEventListener("click",
+        (event) => {
+            loadProject(
+                testUser.getProject(
+                    testUser.hasProject(event.target.textContent)
+                )
+            );          
+        }
+    );
+}

@@ -387,11 +387,14 @@ function createUser(name){
         }
 
         let foundProject = false;
-        for(let i = 0; i < userProjects.length; i++){
+        let i = 0;
+        while(i < userProjects.length && !foundProject){
             if(userProjects[i].getTitle() === projectTitle) foundProject = true;
+            i++;
         }
 
-        return foundProject;
+        if(foundProject) return i - 1;
+        else return -1;
     }
 
     const addProject = (project, index) => {
@@ -415,7 +418,7 @@ function createUser(name){
             console.log("Index must not be greater than number of projects!");
             return undefined;
         }
-        if(hasProject(project.getTitle())){
+        if(hasProject(project.getTitle()) > -1){
             console.log("Project already exists!");
             return undefined;
         }
