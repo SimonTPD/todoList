@@ -2,22 +2,17 @@ import {
     createTodoDiv,
     appendDOMElementToMainPage,
     clearMainDiv,
-} from './dom.js';
+} 
+from './dom.js';
+import {
+    testUser,
+}
+from './index.js'
 
-function loadAllTasks(user){
-    //Type checks
-    if((user instanceof Object) === false){
-        console.log("User needs to be an object!");
-        return undefined;
-    }
-    if(user.hasOwnProperty("isUser") === false){
-        console.log("This function only accepts user objects!");
-        return undefined;
-    }
-
+function loadAllTasks(){
     clearMainDiv();
 
-    const userProjects = user.getAllProjects();
+    const userProjects = testUser.getAllProjects();
 
     for(let i = 0; i < userProjects.length; i++){
             const projectTodos = userProjects[i].getAllTodos();

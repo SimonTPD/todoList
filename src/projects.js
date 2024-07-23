@@ -4,20 +4,16 @@ import {
     appendDOMElementToMainPage,
     appendDOMElementToProjectSidebar,
     clearMainDiv,
-} from './dom.js'
+    createAddTodoDiv,
+} 
+from './dom.js';
+import{
+    testUser,
+}
+from './index.js';
 
-function loadAllProjectLisOnSidebar(user){
-    //Type checks
-    if((user instanceof Object) === false){
-        console.log("User needs to be an object!");
-        return undefined;
-    }
-    if(user.hasOwnProperty("isUser") === false){
-        console.log("This function only accepts user objects!");
-        return undefined;
-    }
-
-    const projectList = user.getAllProjects();
+function loadAllProjectLisOnSidebar(){
+    const projectList = testUser.getAllProjects();
     const sidebarProjectLis = []
 
     for(let i = 0; i < projectList.length; i++){
@@ -60,6 +56,7 @@ function loadProject(project){
     for(let i = 0; i < projectTodos.length; i++){
         appendDOMElementToMainPage(createTodoDiv(projectTodos[i]));
     }
+    appendDOMElementToMainPage(createAddTodoDiv());
 }
 
 export {

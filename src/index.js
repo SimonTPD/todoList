@@ -13,7 +13,10 @@ import {
     loadProject,
 } 
 from './projects.js'
-
+import {
+    createSidebarProjectForm,
+}
+from './dom.js'
 /*Test items and project*/
 let testItem = createTodoItem("Finish this website",
 "Lots of things to do here, no time to rest. Go!",
@@ -56,60 +59,29 @@ let testProject2 = createProject("Personal");
 testProject2.addTodo(testItem3, 0);
 testProject2.addTodo(testItem4, 1);
 
-let testUser = createUser("Simon");
+var testUser = createUser("Simon");
 testUser.addProject(testProject2, 0);
 testUser.addProject(testProject, 1);
 
 /*Main*/
-loadAllTasks(testUser);
-const projectSidebarLis = loadAllProjectLisOnSidebar(testUser);
+loadAllTasks();
+const projectSidebarLis = loadAllProjectLisOnSidebar();
 
 /*Event listeners*/
 const allTasksButton = document.querySelector("div.sidebar > ul > li#all-tasks");
 allTasksButton.addEventListener("click", 
 () => {
-    loadAllTasks(testUser);
+    loadAllTasks();
 }
 );
 
 const addProjectButton = document.querySelector("div.sidebar > ul > li#add-project");
 addProjectButton.addEventListener("click",
 (event) => {
-    let newProject = createProject("New Project");
-    const addProjectReturn = 
-    testUser.addProject(newProject, testUser.getAllProjects().length);
-    if(addProjectReturn === undefined){
-        console.log(`Problem adding a new project in the sidebar (add project to the user). Check console log for error message.`);
-        return undefined;
-    }
-
-    const newProjectLi = addProjectLiToSidebar(newProject);
-    if(newProjectLi === undefined){
-        console.log(`Problem adding a new project in the sidebar (add project to the sidebar). Check console log for error message.`);
-        return undefined;
-    }
-
-    newProjectLi.addEventListener("click", 
-    (event) => {
-        loadProject(
-            testUser.getProject(
-                testUser.hasProject(event.target.textContent)
-            )
-        );
-    }
-    );
+    createSidebarProjectForm();
 }
 );
 
-for(let i = 0; i < projectSidebarLis.length; i++){
-    console.log(testUser.getProject(testUser.hasProject(projectSidebarLis[i].textContent)).getTitle());
-    projectSidebarLis[i].addEventListener("click",
-        (event) => {
-            loadProject(
-                testUser.getProject(
-                    testUser.hasProject(event.target.textContent)
-                )
-            );          
-        }
-    );
+export{
+    testUser,
 }

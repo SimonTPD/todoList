@@ -427,6 +427,10 @@ function createUser(name){
         return 0;        
     }
 
+    const appendProject = (project) => {
+        addProject(project, userProjects.length);
+    }
+
     const removeProject = (index) => {
         if(typeof index !== "number"){
             console.log("Index must be a number!");
@@ -488,6 +492,7 @@ function createUser(name){
         setName,
         hasProject,
         addProject,
+        appendProject,
         removeProject,
         getProject,
         getProjectByTitle,
@@ -499,4 +504,5 @@ export{
     createTodoItem,
     createProject,
     createUser,
+    MAX_USERNAME_LENGTH,
 };

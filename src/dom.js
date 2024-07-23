@@ -1,3 +1,16 @@
+import {
+    createProject,
+    MAX_USERNAME_LENGTH,
+}
+from './todo.js';
+import {
+    loadProject,
+}
+from './projects.js';
+import{
+    testUser,
+}
+from './index.js'
 const DIV_MAIN = "div.main";
 const PROJECT_SIDEBAR_UL = "div.sidebar > ul#projects";
 
@@ -34,6 +47,8 @@ function createTodoDiv(todo){
     todoPriority.textContent = todo.getStatus() ? "Done" : "Not done";
     todoNotes.textContent = todo.getNotes();
 
+    todoDiv.classList.add("todo");
+
     return todoDiv;
 }
 
@@ -44,9 +59,20 @@ function createSidebarProjectLi(projectName){
         return undefined;
     }
 
+    //Create project li
     const projectLi = document.createElement("li");
     projectLi.textContent = projectName;
 
+    //Event listener
+    projectLi.addEventListener("click", 
+        (event) => {
+            loadProject(
+                testUser.getProject(
+                    testUser.hasProject(event.target.textContent)
+                )
+            );
+        }
+    );
     return projectLi;
 }
 
@@ -99,6 +125,75 @@ function clearMainDiv(){
     }
 }
 
+function createSidebarProjectForm(){
+    const sidebar = document.querySelector(PROJECT_SIDEBAR_UL);
+
+    //Create form
+    const projectForm = document.createElement("form");
+    projectForm.classList.add("project-form");
+    const formInput = document.createElement("input");
+    formInput.setAttribute("type", "text");
+    formInput.setAttribute("id", "name");
+    formInput.setAttribute("name", "name");
+    formInput.setAttribute("placeholder", "Enter project name");
+    formInput.setAttribute("maxlength", MAX_USERNAME_LENGTH);
+    const formAdd = document.createElement("button");
+    formAdd.setAttribute("type", "button");
+    formAdd.textContent = "Add";
+    const formCancel = document.createElement("button");
+    formAdd.setAttribute("type", "button");
+    formCancel.textContent = "Cancel";
+
+    //Button event listeners
+    formAdd.addEventListener("click", 
+    (event) => {
+        const formInput = document.querySelector("form.project-form > input");
+        const projectName = formInput.value;
+        testUser.appendProject(createProject(projectName));
+        sidebar.removeChild(projectForm);
+        appendDOMElementToProjectSidebar(createSidebarProjectLi(projectName));
+    }
+    );
+
+    formCancel.addEventListener("click",
+    (event) => {
+        sidebar.removeChild(projectForm);
+    }
+    );
+
+    //Link DOM elements to one another
+    projectForm.appendChild(formInput);
+    projectForm.append(formAdd);
+    projectForm.append(formCancel);
+    sidebar.appendChild(projectForm);
+}
+
+function createAddTodoDiv(){
+    //Create elements
+    const addTodoDiv = document.createElement("div");
+    const addTodoP = document.createElement("p");
+    addTodoP.textContent = "Add new task";
+    const addTodoButton = document.createElement("button");
+    addTodoButton.setAttribute("type", "button");
+    addTodoButton.textContent = "X";
+
+    //Event listener
+    addTodoButton.addEventListener("click",
+    (event) => {
+        createAddTodoForm();
+    }
+    );
+
+    //Link DOM elements to one another
+    addTodoDiv.appendChild(addTodoP);
+    addTodoDiv.appendChild(addTodoButton);
+
+    return addTodoDiv;
+}
+
+function createAddTodoForm(){
+    
+}
 
 export {
     createTodoDiv,
@@ -106,4 +201,6 @@ export {
     appendDOMElementToMainPage,
     appendDOMElementToProjectSidebar,
     clearMainDiv,
+    createSidebarProjectForm,
+    createAddTodoDiv,
 }
